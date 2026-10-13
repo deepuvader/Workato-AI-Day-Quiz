@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live leaderboard | Workato quiz</title>
+<link rel="icon" href="assets/icon-teal.png">
+<link rel="stylesheet" href="brand.css">
+<style>
+  .head { display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .live { display:inline-flex; align-items:center; gap:.5rem; font-size:.85rem; color:var(--muted); }
+  .live i { width:9px; height:9px; border-radius:50%; background:var(--green-100); display:inline-block; box-shadow:0 0 0 0 rgba(200,232,50,.6); animation:pulse 2s infinite; }
+  .live.err i { background:var(--coral); animation:none; }
+  @keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(200,232,50,0); } 100% { box-shadow:0 0 0 0 rgba(200,232,50,0); } }
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(11rem, 1fr)); gap:.75rem; margin-bottom:1rem; }
+  .layout { display:grid; gap:1rem; grid-template-columns:minmax(0,1fr); }
+  @media (min-width:1024px){ .layout { grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); align-items:start; } }
+  .podium { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.75rem; margin-bottom:1rem; }
+  .pod { background:var(--card-dark); border:1px solid var(--border-light); border-radius:var(--r-xl); padding:1rem; border-top:4px solid var(--mid); min-width:0; }
+  .pod.p1 { border-top-color:var(--hero-teal); background:var(--blue-200); }
+  .pod.p2 { border-top-color:var(--cyan-100); } .pod.p3 { border-top-color:var(--violet-100); }
+  .pod .r { font-size:.75rem; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-50); font-weight:600; }
+  .pod .n { font-size:1.05rem; font-weight:600; margin:.35rem 0 .1rem; overflow-wrap:anywhere; }
+  .pod .c { color:var(--text-3); font-size:.85rem; overflow-wrap:anywhere; }
+  .pod .s { margin-top:.6rem; font-size:1.5rem; font-weight:600; color:var(--text); font-variant-numeric:tabular-nums; }
+  .pod .s small { font-size:.8rem; color:var(--muted); font-weight:400; }
+  .latest .big { font-family:var(--display); font-size:3.5rem; line-height:1; font-weight:700; color:var(--hero-teal); font-variant-numeric:tabular-nums; }
+  .latest .who { font-size:1.2rem; font-weight:600; margin-top:.5rem; overflow-wrap:anywhere; }
+  .flash { animation:flash 1.6s ease-out; }
+  @keyframes flash { from { background:rgba(0,212,216,.30); } to { background:var(--card-dark); } }
+  .searchrow { display:flex; gap:.75rem; align-items:center; justify-content:space-between; margin-bottom:.75rem; flex-wrap:wrap; }
+  .searchrow input { max-width:18rem; }
+  .empty { padding:2rem 1rem; text-align:center; color:var(--muted); }
+  .dewyhead { width:130px; flex:none; }
+  .latest .dewy { position:absolute; right:.75rem; top:.5rem; width:84px; }
+  @media (max-width:639px){ .dewyhead { display:none; } }
+  @media (max-width:639px){ .podium { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="shell wide">
+  <div class="brandbar">
+    <img src="assets/logo-teal.png" alt="Workato">
+    <a class="btn secondary" href="index.html" style="padding:.5rem 1rem">Play the quiz</a>
+  </div>
+
+  <div class="head">
+    <img class="dewy dewyhead" src="assets/dewy-cheer.png" alt="">
+    <div style="flex:1 1 20rem">
+      <p class="pre">Control and execution plane quiz</p>
+      <h1>Live leaderboard</h1>
+      <p class="lead" style="margin-top:.5rem">Ranked by correct answers, then by the least time spent on correct answers. Each player's best attempt counts.</p>
+    </div>
+    <span class="live" id="live"><i></i><span id="liveText">Connecting...</span></span>
+  </div>
+
+  <div class="tiles">
+    <div class="metric"><small>Players</small><b id="tPlayers">0</b></div>
+    <div class="metric time"><small>Games played</small><b id="tGames">0</b></div>
+    <div class="metric ok"><small>Top score</small><b id="tTop">0</b></div>
+    <div class="metric"><small>Average correct</small><b id="tAvg">0</b></div>
+  </div>
+
+  <div class="podium" id="podium"></div>
+
+  <div class="layout">
+    <div>
+      <div class="searchrow">
+        <h2>Rankings</h2>
+        <input id="search" type="text" placeholder="Search name or company" aria-label="Search name or company">
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Rank</th><th>Player</th><th>Company</th><th class="num">Correct</th><th class="num">Wrong</th><th class="num">Time on correct</th><th class="num">Games</th></tr></thead>
+          <tbody id="body"><tr><td colspan="7" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card accent latest" id="latestCard">
+        <img class="dewy" src="assets/dewy-jump.png" alt="">
+        <p class="pre">Latest score</p>
+        <div id="latest"><span class="muted">Waiting for the first finished game.</span></div>
+      </div>
+      <div class="card">
+        <h2>Recent games</h2>
+        <div class="tablewrap" style="margin-top:.75rem">
+          <table><thead><tr><th>Player</th><th class="num">Correct</th><th class="num">Time</th></tr></thead><tbody id="recent"></tbody></table>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="rank.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const REFRESH_MS = 8000;
+let lastLatestRid = null, lastRows = [];
+
+function podium(list) {
+  const labels = ["First", "Second", "Third"];
+  $("podium").innerHTML = [0, 1, 2].map(i => {
+    const p = list[i];
+    return p ? '<div class="pod p' + (i + 1) + '"><div class="r">' + labels[i] + '</div><div class="n">' + Quiz.esc(p.name) + '</div><div class="c">' + Quiz.esc(p.company) +
+      '</div><div class="s">' + p.correct + ' <small>correct in ' + Quiz.fmtTime(p.time) + '</small></div></div>'
+      : '<div class="pod p' + (i + 1) + '"><div class="r">' + labels[i] + '</div><div class="n muted">Open</div><div class="c">Waiting for a player</div></div>';
+  }).join("");
+}
+
+function render(rows) {
+  lastRows = rows;
+  const list = Quiz.standings(rows);
+  const games = rows.length, players = list.length;
+  $("tPlayers").textContent = players; $("tGames").textContent = games;
+  $("tTop").textContent = players ? list[0].correct : 0;
+  $("tAvg").textContent = games ? (rows.reduce((s, r) => s + Quiz.num(r.correct), 0) / games).toFixed(1) : "0";
+  podium(list);
+  drawTable(list);
+
+  const byTime = rows.map(r => ({ ...r, fin: Date.parse(String(r.finished || "").replace(/(\.\d{3})\d+/, "$1")) || 0 })).sort((a, b) => b.fin - a.fin);
+  if (byTime.length) {
+    const l = byTime[0], pl = list.find(p => p.key === l.key);
+    const changed = l.rid !== lastLatestRid; lastLatestRid = l.rid;
+    $("latest").innerHTML = '<div class="big">' + Quiz.num(l.correct) + '</div><div class="muted">correct in ' + Quiz.fmtTime(l.time) + '</div>' +
+      '<div class="who">' + Quiz.esc(l.name) + '</div><div class="muted">' + Quiz.esc(l.company) + '</div>' +
+      (pl ? '<div style="margin-top:.75rem"><span class="badge brand">Now ranked ' + Quiz.ordinal(pl.rank) + ' of ' + players + '</span></div>' : "");
+    if (changed) { const c = $("latestCard"); c.classList.remove("flash"); void c.offsetWidth; c.classList.add("flash"); }
+    $("recent").innerHTML = byTime.slice(0, 8).map(r => '<tr><td>' + Quiz.esc(r.name) + '</td><td class="num">' + Quiz.num(r.correct) + '</td><td class="num">' + Quiz.fmtTime(r.time) + '</td></tr>').join("");
+  }
+}
+
+function drawTable(list) {
+  const q = $("search").value.trim().toLowerCase();
+  const f = q ? list.filter(p => (p.name + " " + p.company).toLowerCase().includes(q)) : list;
+  $("body").innerHTML = f.length ? f.map(p => '<tr><td class="rankcell">#' + p.rank + '</td><td>' + Quiz.esc(p.name) + '</td><td>' + Quiz.esc(p.company) +
+    '</td><td class="num">' + p.correct + '</td><td class="num">' + p.wrong + '</td><td class="num">' + Quiz.fmtTime(p.time) + '</td><td class="num">' + p.played + '</td></tr>').join("")
+    : '<tr><td colspan="7" class="empty">' + (list.length ? "No players match your search." : "No games finished yet. Be the first on the board.") + '</td></tr>';
+}
+
+async function tick() {
+  const live = $("live");
+  try {
+    if (/PASTE_/.test(QUIZ_API_KEY)) throw new Error("not configured");
+    const r = await Quiz.api({ action: "leaderboard" });
+    if (!r.ok) throw new Error(r.error || "failed");
+    render(r.rows || []);
+    live.classList.remove("err"); $("liveText").textContent = "Live, updated " + new Date().toLocaleTimeString();
+  } catch (e) {
+    live.classList.add("err");
+    $("liveText").textContent = /not configured/.test(e.message) ? "Add the API key in config.js" : "Reconnecting...";
+  }
+}
+$("search").addEventListener("input", () => drawTable(Quiz.standings(lastRows)));
+tick(); setInterval(tick, REFRESH_MS);
+</script>
+</body>
+</html>

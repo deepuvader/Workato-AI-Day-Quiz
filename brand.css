@@ -1,0 +1,117 @@
+/* Workato 2026 official template: Blue 400 ground, Hero Teal headings, Besley titles (sentence case),
+   Figtree body, Inconsolata for code. Dewy and flair artwork are cut from the template's graphic library. */
+@import url("https://fonts.googleapis.com/css2?family=Besley:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Inconsolata:wght@500;600&display=swap");
+
+:root {
+  /* Template palette (Brand colors, page 6) */
+  --blue-400: #083763;     /* Blue 400: page ground */
+  --blue-200: #216DCA;     /* Blue 200 */
+  --baby-blue: #D3EDFA;    /* Baby Blue */
+  --cyan-100: #2FD5FF;     /* Cyan 100 */
+  --hero-teal: #00D4D8;    /* Workato Hero Teal 100 */
+  --violet-100: #C3A9FF;   /* Dewy Violet 100 */
+  --gold-100: #FFC700;     /* Gold 100 */
+  --green-100: #C8E832;    /* Green 100 */
+  --teal-50: #C9F5F6;      /* Workato Teal 50 */
+  --coral: #FF6A3D;        /* flair triangle colour from the template artwork */
+  --card-dark: #042A4E;    /* dark blue card (template dark layouts) */
+  --lift: #0B4479;         /* hover / input surface, one step above the page */
+
+  /* Aliases used by the page markup */
+  --bg: var(--blue-400); --card: var(--card-dark); --surface: var(--lift);
+  --mid: #7C9BBD; --light: var(--baby-blue);
+  --teal: var(--teal-50); --teal-2: var(--hero-teal); --teal-3: var(--cyan-100);
+  --text: #FFFFFF; --text-2: rgba(255,255,255,.88); --text-3: rgba(255,255,255,.75); --muted: rgba(255,255,255,.68);
+  --border: rgba(211,237,250,.30); --border-light: rgba(211,237,250,.16);
+  --success: var(--green-100); --warning: var(--gold-100); --danger: var(--coral); --info: var(--cyan-100); --purple: var(--violet-100);
+  --grad: var(--hero-teal); --grad-dark: var(--blue-200);
+  --strip: linear-gradient(90deg, #67EADD 0%, #7EDAE5 25%, #94CAEE 50%, #ADB9F7 75%, #C2A9FF 100%);
+
+  --display: "Besley", "Georgia", serif;
+  --font: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "Inconsolata", "SF Mono", monospace;
+  --r-md: .5rem; --r-lg: .75rem; --r-xl: 1.25rem; --r-2xl: 1.5rem;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg) url("assets/flair.png") no-repeat right top / min(62vw, 760px) auto;
+  color: var(--text); font-family: var(--font); font-weight: 400; font-size: 15px; line-height: 22px;
+  min-height: 100vh; padding: 1.5rem 1rem 4rem; position: relative;
+}
+body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 8px; background: var(--strip); z-index: 50; }
+@media (min-width: 640px) { body { font-size: 17px; line-height: 26px; } }
+
+.shell { width: 100%; max-width: 42rem; margin: 0 auto; position: relative; }
+.shell.wide { max-width: 90rem; }
+
+.brandbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.brandbar img { height: 32px; width: auto; display: block; }
+.brandbar .tag { font-size: .75rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); }
+
+h1, h2, h3 { margin: 0; font-family: var(--display); font-weight: 600; color: var(--hero-teal); text-wrap: balance; }
+h1 { font-size: 30px; line-height: 36px; }
+h2 { font-size: 20px; line-height: 26px; }
+@media (min-width: 640px) { h1 { font-size: 44px; line-height: 50px; } h2 { font-size: 24px; line-height: 30px; } }
+.pre { font-size: 12px; line-height: 18px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal-50); margin: 0 0 .5rem; font-weight: 600; }
+.lead { color: var(--text-2); margin: .75rem 0 0; }
+
+.card { background: var(--card-dark); border: 1px solid var(--border-light); border-radius: var(--r-xl); padding: 1.5rem; position: relative; }
+.card + .card { margin-top: 1rem; }
+.accent { border-top: 4px solid var(--hero-teal); }
+
+.rules { list-style: none; margin: 1.25rem 0 .5rem; padding: 0; display: grid; gap: .5rem; color: var(--text-2); font-size: .95rem; }
+.rules li { padding-left: 1.1rem; position: relative; }
+.rules li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 7px; border-radius: 2px; background: var(--hero-teal); transform: rotate(45deg); }
+
+label { display: block; font-size: .85rem; font-weight: 600; color: var(--text-3); margin: 1rem 0 .375rem; }
+input[type=text], input[type=email], input[type=password], input[type=number] {
+  width: 100%; padding: .8rem 1rem; border-radius: var(--r-lg); border: 1px solid var(--border);
+  background: var(--blue-400); color: var(--text); font: inherit; font-size: 1rem;
+}
+input::placeholder { color: var(--mid); }
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--cyan-100); outline-offset: 2px; }
+.field-error { color: #FFB199; font-size: .95rem; min-height: 1.4em; margin-top: .75rem; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; border: 2px solid transparent;
+  border-radius: 999px; padding: .85rem 1.5rem; color: var(--blue-400); background: var(--hero-teal); text-decoration: none;
+}
+.btn:hover:not(:disabled) { background: #19e3e7; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.full { width: 100%; margin-top: 1.25rem; }
+.btn.secondary { background: transparent; color: var(--teal-50); border-color: var(--hero-teal); }
+.btn.secondary:hover:not(:disabled) { background: rgba(0,212,216,.12); }
+.btn.danger { background: var(--coral); color: #fff; }
+
+.badge { display: inline-block; font-size: .75rem; font-weight: 700; padding: .25rem .6rem; border-radius: 999px; border: 1.5px solid currentColor; background: transparent; letter-spacing: .3px; }
+.badge.easy { color: var(--green-100); } .badge.medium { color: var(--gold-100); } .badge.hard { color: var(--coral); }
+.badge.info { color: var(--cyan-100); } .badge.brand { color: var(--hero-teal); } .badge.purple { color: var(--violet-100); }
+
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 1.25rem 0; }
+.metric { background: var(--blue-400); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: .9rem 1rem; }
+.metric small { display: block; color: var(--text-3); font-size: .8rem; font-weight: 500; }
+.metric b { display: block; font-family: var(--display); font-size: 1.9rem; line-height: 1.2; font-weight: 600; margin-top: .2rem; color: var(--hero-teal); }
+.metric.ok b { color: var(--green-100); } .metric.bad b { color: var(--coral); } .metric.time b { color: var(--cyan-100); }
+
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; border-radius: var(--r-lg); border: 1px solid var(--border-light); }
+thead th { background: var(--blue-200); text-align: left; font-weight: 600; font-size: .85rem; color: #fff; padding: .75rem 1rem; white-space: nowrap; }
+tbody td { padding: .75rem 1rem; border-top: 1px solid rgba(211,237,250,.08); white-space: nowrap; }
+tbody tr:nth-child(odd) { background: var(--card-dark); } tbody tr:nth-child(even) { background: #05325C; }
+tbody tr.you { background: rgba(0,212,216,.16); box-shadow: inset 4px 0 0 var(--hero-teal); }
+td.num, th.num { text-align: right; }
+.rankcell { font-weight: 700; color: var(--hero-teal); }
+code, .mono { font-family: var(--mono); }
+
+.dewy { display: block; height: auto; pointer-events: none; user-select: none; }
+.dewy-corner { position: absolute; right: 1rem; top: -2.25rem; width: 104px; }
+@media (min-width: 640px) { .dewy-corner { width: 150px; top: -3.5rem; right: 1.5rem; } }
+
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
